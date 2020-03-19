@@ -165,3 +165,57 @@ $("input[name=node]").change(function(){
 });
 
 
+//Payment Method
+
+$("#paypal").hide();
+$("#bitcoin").hide();
+
+$('#payment').val("credit card")
+
+$("#payment").change(function(){
+    if($("#payment option:selected").val() === "credit card"){
+        $("#paypal").hide();
+        $("#bitcoin").hide();
+        $("#credit-card").hide();
+
+    }else if($("#payment option:selected").val() === "paypal"){
+        $("#bitcoin").hide();
+        $("#credit-card").hide();
+        $("#paypal").show();
+
+    }else if($("#payment option:selected").val() === "bitcoin"){
+        $("#paypal").hide();
+        $("#credit-card").hide();
+        $("#bitcoin").show();
+
+    }else{
+        $("#payment").append('<option value="dimgrey">Dim Grey</option>')
+
+    }
+
+})
+
+//Validation
+function validateName(nameInput){
+    const nameTest = /^[a-zA-Z]+ [a-zA-Z]+$/;
+    let name = nameInput;
+    
+
+
+}
+
+function validateEmail(email){
+
+
+
+}
+
+function validateActivitySection(){
+
+
+}
+
+function validateCreditCard(){
+
+
+}
