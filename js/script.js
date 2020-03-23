@@ -253,7 +253,7 @@ $(document).ready(function(){
             console.log("False");
         }
     }
-
+    //
     function validateCreditCard(cc, zip, cvv){
         if(cc.length >= 13  && cc.length <= 16 && zip.length == 5 && cvv.length == 3){
             return true;
