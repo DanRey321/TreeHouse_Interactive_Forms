@@ -168,60 +168,97 @@ $(document).ready(function(){
     //
 
     $('form').prepend('<p id="error"></p>');
+    $('form').prepend('<p id="error1"></p>');
+    $('form').prepend('<p id="error2"></p>');
+    $('form').prepend('<p id="error3"></p>');
     $('#error').hide();
+    $('#error1').hide();
+    $('#error2').hide();
+    $('#error3').hide();
     
     //Validation
     $('form').submit(function(event){
 
-        event.preventDefault();
         //Shortcuts
-        var name = $('#name').val();
-        var email = $('#mail').val();
-        var actvitites = $('input[type="checkbox"]');
-        var cc_num = $('#cc-num').val();
-        var zip = $('#zip').val();
-        var cvv = $('#cvv').val();
-        var message = "";
+        let name = $('#name').val();
+        let email = $('#mail').val();
+        let actvitites = $('input[type="checkbox"]');
+        let cc_num = $('#cc-num').val();
+        let zip = $('#zip').val();
+        let cvv = $('#cvv').val();
+        let message = "";
+        
 
         //Validation Call Functions will return true or false
-        var nameCheck = validateName(name);
-        const emailCheck = validateEmail(email);
-        const activityCheck = validateActivitySection(actvitites);
-        const creditCardCheck = validateCreditCard(cc_num, zip, cvv);
+        let nameCheck = validateName(name);
+        let emailCheck = validateEmail(email);
+        let activityCheck = validateActivitySection(actvitites);
+        let creditCardCheck = false
+        if($("#payment").val() === "credit card"){
+            creditCardCheck = validateCreditCard(cc_num, zip, cvv);
+        }
+        else{ //If paypal or bitcoin selected, return true for correct validiation
+            creditCardCheck = true;
+        }
+        
         //"If" functions check for errors and will inform the user where that error occured at the top of the form 
         if(!nameCheck){
             message = "<p>Name not Valid</p>";
+            event.preventDefault();
             console.log('error');
             $("#error").html(message); 
             $('#error').show();
             $('#name').focus();
-        }else if(!emailCheck){
-            message = "<p>Email not Valid</p>";
-            console.log('error');
-            $("#error").html(message); 
-            $('#error').show();
-            $('#mail').focus();
-        }else if(!activityCheck){
-            message = "<p>Activity not Valid</p>";
-            console.log('error');
-            $("#error").html(message); 
-            $('#error').show();
-            //$('#name').focus();
-        }else if(!creditCardCheck){
-            message = "<p>Credit Card not Valid</p>";
-            console.log('error');
-            $("#error").html(message); 
-            $('#error').show();
-            $('#cc-num').focus();
+            $("html, body").animate({scrollTop: 0}, "slow");
         }else{
-            console.log("Correct");
             $('#error').hide();
+        }
+        if(!emailCheck){
+            message = "<p>Email not Valid</p>";
+            event.preventDefault();
+            console.log('error');
+            $("#error1").html(message); 
+            $('#error1').show();
+            $('#mail').focus();
+            $("html, body").animate({scrollTop: 0}, "slow");
+        }else{
+            $('#error1').hide();
+        }
+        if(!activityCheck){
+            message = "<p>Activity not Valid</p>";
+            event.preventDefault();
+            console.log('error');
+            $("#error2").html(message); 
+            $('#error2').show();
+            //$('#name').focus();
+            $("html, body").animate({scrollTop: 0}, "slow");
+        }else{
+            $('#error2').hide();
+        }
+        if(!creditCardCheck){
+            message = "<p>Credit Card not Valid</p>";
+            event.preventDefault();
+            console.log('error');
+            $("#error3").html(message); 
+            $('#error3').show();
+            $('#cc-num').focus();
+            $("html, body").animate({scrollTop: 0}, "slow");
+        }else{
+            $('#error3').hide();
+            
+        }
+        if(creditCardCheck && activityCheck && emailCheck && nameCheck){
             alert("You have successfully registered");
         }
+        document.getElementById("error").style.color = "red";
+        document.getElementById("error1").style.color = "red";
+        document.getElementById("error2").style.color = "red";
+        document.getElementById("error3").style.color = "red";
+        
     
     //Validation Functions
     function validateName(name){
-        const nameTest = /^[a-zA-Z]+ [a-zA-Z]+$/;
+        const nameTest = /^[a-zA-Z]{2,}(?: [a-zA-Z]+){0,2}$/;
         
         if(name == "" || !nameTest.test(name)){
             return false;
@@ -255,15 +292,22 @@ $(document).ready(function(){
     }
     //
     function validateCreditCard(cc, zip, cvv){
-        if(cc.length >= 13  && cc.length <= 16 && zip.length == 5 && cvv.length == 3){
+        //
+        const cvvReg = /^\d{3}$/;
+        const ccReg = /^\d{13,16}$/
+        const zipReg = /^\d{5}$/;
+        if(ccReg.test(cc) && zipReg.test(zip) && cvvReg.test(cvv)){
             return true;
             console.log("True");
-        }else{
+
+        }
+        else{
             return false;
             console.log("False");
         }
     }
     
     });
+    
 
 });
